@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import './Game.css';
 // import { Container } from './styles';
 
-const components = ({
+const Components = ({
     verifyLetter,
     pickedWord,
     pickedCategory,
@@ -13,10 +13,20 @@ const components = ({
     score
 }) => {
 
-    const submit = (event) => {
-        event.preventDefault();
+    const [letter, setLetter] = useState('');
+    const letterInputRef = useRef(null);
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        verifyLetter(letter);
+
+        setLetter("");
+
+        letterInputRef.current.focus();
     }
-    console.log(guessedLetters);
+
+    console.log(letters);
 
     return (
         <div className="game">
@@ -34,7 +44,7 @@ const components = ({
 
             <div className="wordContainer">
                 {letters.map((letter, i) => (
-                    guessedLetters.includes(letters) ? (
+                    guessedLetters.includes(letter) ? (
                         <span key={i} className="letter">{letter}</span>
                     ) : (
                         <span key={i} className="blankSquare"></span>
@@ -46,10 +56,20 @@ const components = ({
             <div className="letterContainer">
                 <p>Tente adivinhar uma letra da palavra:</p>
 
-                <form onSubmit={submit}>
-                    <input type="text" name="letter" maxLength={1} required autoComplete="off" />
+                <form onSubmit={handleSubmit}>
+                    <input
+                        type="text"
+                        name="letter"
+                        maxLength={1}
+                        required
+                        autoComplete="off"
+                        onChange={(e) => setLetter(e.target.value)}
+                        value={letter}
+                        ref={letterInputRef}
 
-                    <button>JOGAR!</button>
+                    />
+
+                    <button type="submit">JOGAR!</button>
                 </form>
             </div>
 
@@ -60,9 +80,8 @@ const components = ({
                 ))}
             </div>
 
-            <button onClick={verifyLetter}>Finalizar jogo</button>
         </div>
     );
 }
 
-export default components;
+export default Components;
